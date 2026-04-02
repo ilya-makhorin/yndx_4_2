@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+redis
+aiohttp
+celery
+python-dotenv
+pydantic-settings
+requests
+websockets

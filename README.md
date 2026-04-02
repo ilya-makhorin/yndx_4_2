@@ -1,1 +1,5 @@
-# yndx_4_2
+## Запуск
+
+```Bash
+sudo docker compose up --build
+```
