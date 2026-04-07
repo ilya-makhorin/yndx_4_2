@@ -1,6 +1,10 @@
 import anyio
 from celery.exceptions import TimeoutError
 
+from app.exceptions.weather_errors import (
+    WeatherCacheDataMissingError,
+    WeatherCacheUpdateTimeoutError,
+)
 from app.services.weather_service import get_weather
 from app.tasks.weather_tasks import update_weather_cache
 
@@ -20,15 +24,11 @@ async def get_city_weather_uc(city: str, timeout_seconds: int = 1500) -> dict:
             lambda: async_result.get(timeout=timeout_seconds)
         )
     except TimeoutError as exc:
-        raise Exception(
-            f"Кеш не обновлён за {timeout_seconds} секунд."
-        ) from exc
+        raise WeatherCacheUpdateTimeoutError(timeout_seconds) from exc
 
     cached_after = await get_weather(city)
     if cached_after is None:
-        raise Exception(
-            "Задача Celery завершилась, но данные не появились в Redis."
-        )
+        raise WeatherCacheDataMissingError()
 
     return cached_after
 

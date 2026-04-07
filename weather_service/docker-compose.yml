@@ -12,9 +12,25 @@ services:
     depends_on:
       - redis
       - rabbitmq
+      - postgres
 
   redis:
     image: "redis:6.2"
+
+  postgres:
+    image: "postgres:16"
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    command: -p ${POSTGRES_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   rabbitmq:
     image: "rabbitmq:3-management"
     ports:
@@ -36,6 +52,7 @@ services:
     depends_on:
       - redis
       - rabbitmq
+      - postgres
 
   celery_beat:
     build:
@@ -47,3 +64,7 @@ services:
     depends_on:
       - redis
       - rabbitmq
+      - postgres
+
+volumes:
+  postgres_data:

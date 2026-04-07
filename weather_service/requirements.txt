@@ -8,3 +8,12 @@ python-dotenv
 pydantic-settings
 requests
 websockets
+sqlalchemy>=2.0,<3.0
+psycopg2-binary
+python-jose[cryptography]
+passlib[argon2]
+email-validator
+
+pytest
+pytest-asyncio
+httpx
